@@ -5,6 +5,7 @@ module.exports.testsController = {
         try {
             const newQuestion = await Test.create(
                 { 
+                    test: req.body.test,
                     question: req.body.question,
                     answers: req.body.answers
                 }

@@ -1,14 +1,18 @@
 const mongoose = require('mongoose');
 
 const testSchema = mongoose.Schema({
-    question: String,
-    answers: [
+    test: [
         {
-            answer: String,
-            isCorrect: {
-                type: Boolean,
-                default: false
-            }
+            question: String,
+            answers: [
+                {
+                    answer: String,
+                    isCorrect: {
+                        type: Boolean,
+                        default: false
+                    }
+                }
+            ],
         }
     ]
 });
