@@ -6,12 +6,7 @@ module.exports.testsController = {
             const newQuestion = await Test.create(
                 { 
                     question: req.body.question,
-                    answers: [
-                        {
-                            answer: req.body.answer,
-                            isCorrect: req.body.isCorrect
-                        }
-                    ]
+                    answers: req.body.answers
                 }
             )
             res.json(newQuestion)
@@ -29,21 +24,6 @@ module.exports.testsController = {
         }
     },
 
-    pushAnswers: async (req, res) => {
-        try {
-            const newAnswer = await Test.findByIdAndUpdate(req.params.id, {
-                $push: {
-                    answers: {
-                        answer: req.body.answer,
-                        isCorrect: req.body.isCorrect
-                    }
-                }
-            })
-            res.json(newAnswer);
-        } catch (e) {
-            res.json(e)
-        }
-    }
 }
 
 
