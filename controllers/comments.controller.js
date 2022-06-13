@@ -6,11 +6,23 @@ module.exports.commentsController = {
       const comment = await Comment.create({
         text: req.body.text,
         test: req.params.id,
-        user: req.body.user,
+        user: req.user.id,
       });
       res.json(comment);
     } catch (err) {
       res.json("err");
+    }
+  },
+
+  getAllComments: async (req, res) => {
+    try {
+        const comment = await Comment.find();
+
+        res.status(200).json(comment);
+    } catch (err) {
+        res.status(200).json({
+            error: err.message
+        })
     }
   },
 
