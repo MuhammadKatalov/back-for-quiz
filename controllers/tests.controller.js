@@ -25,9 +25,10 @@ module.exports.testsController = {
   postTest: async (req, res) => {
     try {
       
-      const { testName, questions } = req.body;
+      const { testName, questions, description } = req.body;
+      const { category } = req.params;
 
-      const test = await Test.create({ testName, questions, category: req.params.category });
+      const test = await Test.create({ testName, description, questions, category });
 
       res.json(test);
 

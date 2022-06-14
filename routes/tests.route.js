@@ -5,6 +5,6 @@ const router = Router();
 
 router.get('/', testsController.getTests);
 router.get('/:id', testsController.getTestById);
-router.post('/category/:category', testsController.postTest);
+router.post('/category/:categoryId', testsController.postTest);
 
 module.exports = router;
