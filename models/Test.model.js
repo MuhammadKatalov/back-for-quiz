@@ -1,20 +1,22 @@
 const mongoose = require('mongoose');
 
 const testSchema = mongoose.Schema({
-    test: [
-        {
-            question: String,
-            answers: [
-                {
-                    answer: String,
-                    isCorrect: {
-                        type: Boolean,
-                        default: false
-                    }
-                }
-            ],
-        }
-    ]
+  testName: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  questions: [{
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: 'Question'
+  }],
+  category: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: 'Category'
+  }
 });
 
 const Test = mongoose.model('Test', testSchema);
