@@ -3,7 +3,7 @@ const { questionController } = require('../controllers/questions.controller');
 
 const router = Router();
 
-router.post('/questions', questionController.postQuestion);
-router.get('/questions', questionController.getQuestions);
+router.post('/', questionController.postQuestion);
+router.get('/', questionController.getQuestions);
 
 module.exports = router;

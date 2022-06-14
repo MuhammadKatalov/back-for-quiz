@@ -3,7 +3,6 @@ const Answer = require('../models/Answer.model');
 module.exports.answerController = {
   postAnswer: async (req, res) => {
     try {
-      
       const { answer, isTrue } = req.body;
 
       const answerr = await Answer.create({answer, isTrue});
