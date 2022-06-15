@@ -19,7 +19,7 @@ module.exports.questionController = {
   getQuestions: async (req, res) => {
     try {
 
-      const question = await Question.find().populate('answers', 'answer');
+      const question = await Question.find()
 
       res.json(question);
 
