@@ -1,9 +1,15 @@
+const { populate } = require('../models/Test.model');
 const Test = require('../models/Test.model');
 
 module.exports.testsController = {
   getTests: async (_, res) => {
     try {
-      const test = await Test.find().populate('questions category', 'questName answers categoryName');
+      const test = await Test.find().populate({
+        path: "questions",
+        populate: {
+            path: "answers"
+        }
+      })
       res.status(200).json(test);
     } catch (err) {
       res.status(404).json({
@@ -25,12 +31,12 @@ module.exports.testsController = {
   postTest: async (req, res) => {
     try {
       
-      const { testName, questions, description } = req.body;
-      const { category } = req.params;
-
-      const test = await Test.create({ testName, description, questions, category });
-
-      res.json(test);
+        const { testName, questions, description } = req.body;
+        const { category } = req.params;
+  
+        const test = await Test.create({ testName, description, questions, category });
+  
+        res.json(test);
 
     } catch (err) {
       res.status(404).json({
