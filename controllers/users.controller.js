@@ -1,4 +1,5 @@
 const User = require("../models/User.model");
+const Test = require("../models/Test.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -50,4 +51,33 @@ module.exports.usersController = {
 
     }
   },
+
+  favoriteTest: async (req, res) => {
+    try {
+      await User.findByIdAndUpdate(req.user.id, {
+        $addToSet: { favoriteTest: req.params.id }
+      });
+
+      res.json("Тест добавлен в избранное");
+    } catch (e) {
+      res.json({
+        error: e.toString()
+      });
+    }
+  },
+  removeFavorite: async (req, res) => {
+    try {
+      await User.findByIdAndUpdate(req.user.id, {
+        $pull: { favoriteTest: req.params.id }
+      });
+
+      res.json("Тест убран из избранного");
+    } catch (e) {
+      res.json({
+        error: e.toString()
+      });
+    }
+  },
+
+
 };
