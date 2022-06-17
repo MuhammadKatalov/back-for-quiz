@@ -1,90 +1,58 @@
 const User = require("../models/User.model");
-const userService = require("../service/user-services");
-const { validationResult } = require("express-validator");
-const ApiError = require("../exceptions/api-error");
-const tokenServices = require("../service/token-services");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
-class UserController {
-  async registration(req, res, next) {
+module.exports.usersController = {
+  registerUser: async (req, res) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return next(ApiError.BadRequest("Некорректный email", errors.array()));
+      const { login, password } = req.body;
+
+      const hash = await bcrypt.hash(
+        password,
+        Number(process.env.BCRYPT_ROUNDS)
+      );
+
+      const user = await User.create({ login: login, password: hash });
+
+      res.json(user);
+    } catch (e) {
+      return res.status(400).json("Ошибка регистрации " + e.toString());
+    }
+  },
+
+  login: async (req, res) => {
+    try {
+      const { login, password } = req.body;
+
+      const candidate = await User.findOne({ login });
+
+      if (!candidate) {
+        return res.status(401).json("Неверный логин");
       }
-      const { email, password } = req.body;
-      const userData = await userService.registration(email, password);
-      res.cookie("refreshToken", userData.refreshToken, {
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
+
+      const valid = await bcrypt.compare(password, candidate.password);
+
+      if (!valid) {
+        return res.status(401).json("Неверный пароль");
+      }
+
+      const payload = {
+        id: candidate._id,
+        login: candidate.login,
+      };
+
+      const token = await jwt.sign(payload, process.env.SECRET_JWT_KEY, {
+        expiresIn: "24h",
       });
-      return res.json(userData);
-    } catch (e) {
-      next(e);
-    }
-  }
 
-  async login(req, res, next) {
-    try {
-      const { email, password } = req.body;
-      const userData = await userService.login(email, password);
-      res.cookie("refreshToken", userData.refreshToken, {
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-      });
-      return res.json(userData);
-    } catch (e) {
-      next(e);
-    }
-  }
+      res.json({ token });
+    } catch (e) {}
+  },
 
-  async logout(req, res, next) {
-    try {
-      const { refreshToken } = req.cookies;
-      const token = await userService.logout(refreshToken);
-      res.clearCookie("refreshToken");
-      return res.json(token);
-    } catch (e) {
-      next(e);
-    }
-  }
-
-  async activate(req, res, next) {
-    try {
-      const activationLink = req.params.link;
-      await userService.activate(activationLink);
-      return res.redirect(process.env.CLIENT_URL);
-    } catch (e) {
-      next(e);
-    }
-  }
-
-  async refresh(req, res, next) {
-    try {
-      const { refreshToken } = req.cookies;
-      const userData = await userService.refresh(refreshToken);
-      res.cookie("refreshToken", userData.refreshToken, {
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-      });
-      return res.json(userData);
-    } catch (e) {
-      next(e);
-    }
-  }
-
-  async getUsers(req, res, next) {
-    try {
-      const users = await userService.getAllUsers();
-      return res.json(users);
-    } catch (e) {
-      next(e);
-    }
-  }
-
-  async favoriteTest(req, res) {
+  favoriteTest: async (req, res) => {
     try {
       await User.findByIdAndUpdate(req.params.id, {
-        $addToSet:{ favoriteTest: [{ favorite: req.body.testId }]},
+        $addToSet: { favoriteTest: [{ favorite: req.body.testId }] },
       });
 
       res.json("Тест добавлен в избранное");
@@ -93,9 +61,9 @@ class UserController {
         error: e.toString(),
       });
     }
-  }
+  },
 
-  async removeFavorite(req, res) {
+  removeFavorite: async (req, res) => {
     try {
       await User.findByIdAndUpdate(req.params.id, {
         $pull: { favoriteTest: req.params.id },
@@ -107,7 +75,5 @@ class UserController {
         error: e.toString(),
       });
     }
-  }
-}
-
-module.exports = new UserController();
+  },
+};
