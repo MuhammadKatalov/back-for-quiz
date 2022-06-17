@@ -5,7 +5,7 @@ module.exports.testsController = {
   getTests: async (_, res) => {
     try {
       const test = await Test.find().populate({
-        path: "questions",
+         path: "questions",
         populate: {
             path: "answers"
         }
