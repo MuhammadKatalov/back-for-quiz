@@ -1,6 +1,5 @@
-const { Router } = require("express");
-
-const router = Router();
+const Router = require("express").Router;
+const router = new Router();
 
 
 router.use("/tests", require("./tests.route"));
