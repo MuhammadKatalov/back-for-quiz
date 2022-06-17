@@ -2,6 +2,7 @@ const User = require("../models/User.model");
 const userService = require("../service/user-services");
 const { validationResult } = require("express-validator");
 const ApiError = require("../exceptions/api-error");
+const tokenServices = require("../service/token-services");
 
 class UserController {
   async registration(req, res, next) {
@@ -82,8 +83,8 @@ class UserController {
 
   async favoriteTest(req, res) {
     try {
-      await User.findByIdAndUpdate(req.user.id, {
-        $addToSet: { favoriteTest: req.params.id },
+      await User.findByIdAndUpdate(req.params.id, {
+        $addToSet:{ favoriteTest: [{ favorite: req.body.testId }]},
       });
 
       res.json("Тест добавлен в избранное");
@@ -96,7 +97,7 @@ class UserController {
 
   async removeFavorite(req, res) {
     try {
-      await User.findByIdAndUpdate(req.user.id, {
+      await User.findByIdAndUpdate(req.params.id, {
         $pull: { favoriteTest: req.params.id },
       });
 
