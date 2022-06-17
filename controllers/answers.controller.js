@@ -7,7 +7,7 @@ module.exports.answerController = {
 
       const answerr = await Answer.create({answer, isTrue});
 
-      res.json(answerr);
+     res.json(answerr);
 
     } catch (err) {
       res.status(404).json({
@@ -22,9 +22,9 @@ module.exports.answerController = {
 
       res.json(answer);
 
-    } catch (err) {
+    } catch (e) {
       res.status(404).json({
-        error: err.message
+        error: e.message
       })
     }
   }
