@@ -5,7 +5,7 @@ module.exports.testsController = {
   getTests: async (_, res) => {
     try {
       const test = await Test.find().populate({
-        path: "questions",
+         path: "questions",
         populate: {
             path: "answers"
         }
@@ -32,9 +32,9 @@ module.exports.testsController = {
     try {
       
         const { testName, questions, description } = req.body;
-        const { category } = req.params;
-  
-        const test = await Test.create({ testName, description, questions, category });
+        const { categoryId } = req.params;
+        console.log(categoryId)
+        const test = await Test.create({ testName, description, questions, category: categoryId });
   
         res.json(test);
 
