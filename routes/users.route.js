@@ -11,6 +11,6 @@ router.get("/activate/:link", usersController.activate);
 router.get("/refresh", usersController.refresh);
 router.get("/users", usersController.getUsers);
 router.patch("/tests/:id/favorite", authMiddleware, usersController.favoriteTest);
-router.patch("/tests/:id/delete", authMiddleware, usersController.removeFavorite);
+router.patch("/tests/:testId/delete", authMiddleware, usersController.removeFavorite);
 
 module.exports = router;

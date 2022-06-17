@@ -5,6 +5,11 @@ const UserSchema = new Schema({
   password: { type: String, required: true },
   isActivated: { type: Boolean, default: false },
   activationLink: { type: String },
+  favoriteTest: [{
+    favorite: {
+    type: Schema.Types.ObjectId,
+    ref: "Test"
+  }}]
 });
 
 module.exports = model("User", UserSchema);
