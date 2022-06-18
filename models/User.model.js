@@ -13,10 +13,8 @@ const userSchema = mongoose.Schema({
 
   favoriteTest: [
     {
-      favorite: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Test",
-      },
     },
   ],
 });
