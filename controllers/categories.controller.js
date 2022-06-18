@@ -97,5 +97,7 @@ module.exports.categoriesController = {
     } catch (err) {
       res.status(404).json({error: err.message});
     }
-  }
+  },
+
+ 
 }
