@@ -9,9 +9,9 @@ module.exports.answerController = {
 
      res.json(answerr);
 
-    } catch (err) {
+    } catch (e) {
       res.status(404).json({
-        error: err.message
+        error: e.message
       })
     }
   },
