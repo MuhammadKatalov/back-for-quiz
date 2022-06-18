@@ -51,13 +51,13 @@ module.exports.usersController = {
 
   favoriteTest: async (req, res) => {
     try {
-      await User.findByIdAndUpdate(req.params.id, {
-        $addToSet: { favoriteTest: [{ favorite: req.body.testId }] },
-      });
+      const user = await User.findByIdAndUpdate(req.user.id, {
+        $addToSet: { favoriteTest: req.params.id },
+      }, { new: true});
 
-      res.json("Тест добавлен в избранное");
+      res.json(user);
     } catch (e) {
-      res.json({
+      res.json({  
         error: e.toString(),
       });
     }
